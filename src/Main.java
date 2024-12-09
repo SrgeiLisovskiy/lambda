@@ -29,19 +29,21 @@ public class Main {
             );
         }
 
-        int count = (int) persons.stream().filter(person -> person.getAge() < 18).count();
-        System.out.println(count);
+        long count = persons.stream().filter(person -> person.getAge() < 18).count();
+        System.out.println("Количество несовершеннолетних: " + count);
 
         List<String> listFamilies = persons.stream()
-                .filter(person -> person.getAge() > 18 && person.getAge() < 27)
-                .map(person -> person.getFamily()).collect(Collectors.toList());
+                .filter(person -> person.getSex().equals(Sex.MAN)&& person.getAge() >= 18 && person.getAge() <= 27)
+                .map(Person ::getFamily).collect(Collectors.toList());
+        System.out.println("Список призывников: " + listFamilies);
 
-        List<String> listWorking = persons.stream()
+        List<Person> listWorking = persons.stream()
                 .filter(person -> person.getAge() > 18)
                 .filter(person -> (person.getSex().equals(Sex.MAN) && person.getAge() < 65)
                         || (person.getSex().equals(Sex.WOMAN)) && person.getAge() < 60)
-                .map(person -> person.getFamily())
-                .sorted(Comparator.naturalOrder())
+                .filter(person -> person.getEducation() == Education.HIGHER)
+                .sorted(Comparator.comparing(Person::getFamily))
                 .collect(Collectors.toList());
+        System.out.println("Отсортированный список работоспособных людей: " + listWorking);
     }
 }
